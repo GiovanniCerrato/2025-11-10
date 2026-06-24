@@ -34,11 +34,10 @@ class Model:
             self._bestObjVal = scoreParz
 
         for n in self._graph.neighbors(parziale[-1]):
-            if len(parziale)>2:
-                if self._graph[parziale[-2][parziale[-1]]["weight"]]> self._graph[parziale[-1][n]["weight"]] and n not in parziale:
-                    parziale.append(n)
-                    self._ricorsione(parziale)
-                    parziale.pop()
+            if self._graph[parziale[-2]][parziale[-1]]["weight"]> self._graph[parziale[-1]][n]["weight"] and n not in parziale:
+                parziale.append(n)
+                self._ricorsione(parziale)
+                parziale.pop()
         return
 
     def _score(self,parziale):
