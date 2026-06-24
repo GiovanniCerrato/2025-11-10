@@ -12,7 +12,6 @@ class Controller:
 
 
     def handleCreaGrafo(self, e):
-        k = 0
         k = self._view._txtIntK.value
         try:
             k = int(k)
@@ -32,12 +31,14 @@ class Controller:
         nNodi, nArchi = self._model.getNumNodiArchi()
         self._view.txt_result.controls.append(ft.Text(f"Numero di nodi: {nNodi}"))
         self._view.txt_result.controls.append(ft.Text(f"Numero di archi: {nArchi}"))
-        self._view._btnCerca.disabled = False
         topFive = self._model.topFive()
         self._view.txt_result.controls.append(ft.Text("5 archi di peso maggiore:", color="red"))
         for a in topFive:
             self._view.txt_result.controls.append(ft.Text(f"Arco:{a[0]} -> {a[1]} - peso: {a[2]["weight"]}"))
+        self._view._btnCerca.disabled = False
+        self._view._btnRicorsione.disabled = False
         self.fillDDNode()
+
         self._view.update_page()
         return
 
@@ -60,7 +61,21 @@ class Controller:
 
 
     def handleRicorsione(self, e):
-        pass
+        if self._node is None:
+            self._view.txt_result.clean()
+            self._view.txt_result.controls.append(ft.Text("Selezionare un nodo"))
+            self._view.update_page()
+            return
+
+        self._view.txt_result.clean()
+        path,score = self._model.getPath(self._node.order_id)
+        self._view.txt_result.controls.append(ft.Text(f"Trovato percorso di peso massimo {score}.\nNodo di partenza: {self._node}"))
+        for n in path:
+            self._view.txt_result.controls.append(ft.Text(f"{n}"))
+
+        self._view.update_page()
+        return
+
 
     def fillDDNode(self):
         self._view._ddNode.options.clear()

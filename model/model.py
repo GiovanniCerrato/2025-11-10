@@ -8,6 +8,47 @@ class Model:
     def __init__(self):
         self._graph = nx.DiGraph()
         self._idMapOrder = {}
+        self._bestPath = []
+        self._bestObjVal = 0
+
+    def getPath(self,order_id):
+        self._bestPath = []
+        self._bestObjVal = 0
+
+        source = self._idMapOrder[order_id]
+
+        parziale = [source]
+
+        for n in self._graph.neighbors(source):
+            parziale.append(n)
+            self._ricorsione(parziale)
+            parziale.pop()
+
+        return self._bestPath,self._bestObjVal
+
+    def _ricorsione(self,parziale):
+        print(len(parziale))
+        scoreParz = self._score(parziale)
+        if scoreParz > self._bestObjVal:
+            self._bestPath = copy.deepcopy(parziale)
+            self._bestObjVal = scoreParz
+
+        for n in self._graph.neighbors(parziale[-1]):
+            if len(parziale)>2:
+                if self._graph[parziale[-2][parziale[-1]]["weight"]]> self._graph[parziale[-1][n]["weight"]] and n not in parziale:
+                    parziale.append(n)
+                    self._ricorsione(parziale)
+                    parziale.pop()
+        return
+
+    def _score(self,parziale):
+        score = 0
+        for i in range(0, len(parziale) - 1):
+            score += self._graph[parziale[i]][parziale[i + 1]]["weight"]
+        return score
+
+
+
 
     def buildGraph(self,store_id,k):
         self._graph.clear()

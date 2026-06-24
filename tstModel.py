@@ -6,3 +6,4 @@ from model.order import Order
 m = Model()
 m.buildGraph(1,5)
 m.getPercorsoMax(403)
+print(m.getPath(403))
