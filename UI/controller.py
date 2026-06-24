@@ -21,7 +21,7 @@ class Controller:
             self._view.txt_result.controls.append(ft.Text("Digitare un valore intero!"))
             self._view.update_page()
             return
-        if self._store == None or k<=0:
+        if self._store is None or k<=0:
             self._view.txt_result.clean()
             self._view.txt_result.controls.append(ft.Text("Selezionare uno store valido e un numero di giorni maggiore di zero!"))
             self._view.update_page()
@@ -37,22 +37,23 @@ class Controller:
         self._view.txt_result.controls.append(ft.Text("5 archi di peso maggiore:", color="red"))
         for a in topFive:
             self._view.txt_result.controls.append(ft.Text(f"Arco:{a[0]} -> {a[1]} - peso: {a[2]["weight"]}"))
-
         self.fillDDNode()
         self._view.update_page()
         return
 
     def handleCerca(self, e):
-        if self._node == None:
+        if self._node is None:
             self._view.txt_result.clean()
-            self._view.txt_result.controls.append(
-                ft.Text("Selezionare un nodo"))
+            self._view.txt_result.controls.append(ft.Text("Selezionare un nodo"))
             self._view.update_page()
             return
 
         self._view.txt_result.clean()
-        self._view.txt_result.controls.append(
-            ft.Text("Selezionare un nodo"))
+        lp = self._model.getPercorsoMax(self._node.order_id)
+        self._view.txt_result.controls.append(ft.Text(f"Nodo di partenza: {self._node}"))
+        for n in lp:
+            self._view.txt_result.controls.append(ft.Text(f"{n}"))
+
         self._view.update_page()
         return
 
@@ -62,15 +63,17 @@ class Controller:
         pass
 
     def fillDDNode(self):
+        self._view._ddNode.options.clear()
         allNodes = self._model.getAllNodes()
-        for n in allNodes():
+        self._view._ddNode.disabled = False
+        for n in allNodes:
             self._view._ddNode.options.append(ft.dropdown.Option(key=n.order_id, data=n, on_click=self._handleNode))
-            self._view.update_page()
-            return
+        self._view.update_page()
+        return
 
     def _handleNode(self, e):
         self._node = e.control.data
-        print(self._node)
+        print(self._node, type(self._node))
         return
 
 

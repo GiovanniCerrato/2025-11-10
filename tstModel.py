@@ -4,5 +4,5 @@ from model.model import Model
 from model.order import Order
 
 m = Model()
-m.buildGraph(3,5)
-m.getPercorsoMax(1515)
+m.buildGraph(1,5)
+m.getPercorsoMax(403)
